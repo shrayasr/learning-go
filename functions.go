@@ -37,6 +37,16 @@ func counter() func() int {
   }
 }
 
+func factorial(num int) int {
+
+  if num == 1 {
+    return 1
+  } else {
+    return num * factorial(num-1)
+  }
+
+}
+
 
 func main() {
 
@@ -61,5 +71,9 @@ func main() {
   counter2()
   counter2()
   fmt.Println(counter2())
+
+  fmt.Println("-----")
+
+  fmt.Println("Factorial of 5 is: ", factorial(5))
 
 }
