@@ -1,15 +1,35 @@
 package main
 
-import "fmt"
+import (
+  "fmt"
+  "time"
+)
+
+func doSomething(val chan bool) {
+  <-val
+  fmt.Println("doing something")
+}
+
+func doSomethingElse(val chan bool) {
+  <-val
+  fmt.Println("doing something else")
+}
+
+func khallas(val chan bool) {
+  time.Sleep(time.Second)
+  val <- true
+  val <- true
+  fmt.Println("khallas")
+}
 
 func main() {
 
-  channel := make (chan string, 2)
+  channel := make(chan bool)
 
-  channel <- "asdf"
-  channel <- "qwer"
+  go doSomething(channel)
+  go doSomethingElse(channel)
+  go khallas(channel)
 
-  fmt.Println(<-channel)
-  fmt.Println(<-channel)
-
+  var input string
+  fmt.Scanln(&input)
 }
