@@ -2,20 +2,14 @@ package main
 
 import "fmt"
 
-func putToChannel (c chan string) {
-  c <- "asdf"
-}
-
-func getFromChannel (c chan string) {
-  fmt.Println(<-c)
-}
-
 func main() {
 
-  channel := make (chan string)
+  channel := make (chan string, 2)
 
-  go getFromChannel(channel)
+  channel <- "asdf"
   channel <- "qwer"
-  go getFromChannel(channel)
-  putToChannel(channel)
+
+  fmt.Println(<-channel)
+  fmt.Println(<-channel)
+
 }
