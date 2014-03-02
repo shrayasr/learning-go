@@ -3,42 +3,30 @@ package main
 import (
   "fmt"
   "time"
+  "math/rand"
 )
 
-func heavyLift(done chan bool) {
-  time.Sleep(time.Second * 6)
-  done <- true
-}
+func doWork(done chan bool) {
+  rand.Seed(42) //TODO Understand why
 
-func lightWork(done chan bool) {
-  time.Sleep(time.Second * 2)
+  secsToWork := rand.Intn(10)
+  fmt.Println("Working...", secsToWork)
+
+  time.Sleep(time.Second * time.Duration(secsToWork))
   done <- true
 }
 
 func main() {
 
-  heavyChannel := make(chan bool)
-  lightChannel := make(chan bool)
+  isWorkDone := make(chan bool)
 
-  noOfTasks := 4
+  go doWork(isWorkDone)
 
-  go heavyLift(heavyChannel)
-  go lightWork(lightChannel)
-  go lightWork(lightChannel)
-  go lightWork(lightChannel)
-
-  for {
-    select {
-    case <-heavyChannel:
-      fmt.Println("Heavy dude done")
-    case <-lightChannel:
-      fmt.Println("Light dude done")
-    }
-    noOfTasks--
-    if noOfTasks == 0 {
-      break
-    }
+  select {
+  case <-isWorkDone:
+    fmt.Println("Work done in time!")
+  case <-time.After(time.Second * 5):
+    fmt.Println("Work not done in time")
   }
-
 
 }
