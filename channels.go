@@ -7,19 +7,22 @@ type person struct {
   name string
 }
 
+func doSomethingSimple(c chan string) {
+  c <- "foo"
+}
+
+func doSomethingComplex(c chan person) {
+  x := person{1, "shrayas"}
+  c <- x
+}
+
 func main() {
 
   simpleChannel := make(chan string)
   complexChannel := make(chan person)
 
-  go func() {
-    simpleChannel <- "foo"
-  }()
-
-  go func() {
-    x := person{1,"shrayas"}
-    complexChannel <- x
-  }()
+  go doSomethingSimple(simpleChannel)
+  go doSomethingComplex(complexChannel)
 
   fmt.Println(<-simpleChannel)
   x := <-complexChannel
