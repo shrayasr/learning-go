@@ -2,30 +2,20 @@ package main
 
 import "fmt"
 
-type person struct {
-  id int
-  name string
+func putToChannel (c chan string) {
+  c <- "asdf"
 }
 
-func doSomethingSimple(c chan string) {
-  c <- "foo"
-}
-
-func doSomethingComplex(c chan person) {
-  x := person{1, "shrayas"}
-  c <- x
+func getFromChannel (c chan string) {
+  fmt.Println(<-c)
 }
 
 func main() {
 
-  simpleChannel := make(chan string)
-  complexChannel := make(chan person)
+  channel := make (chan string)
 
-  go doSomethingSimple(simpleChannel)
-  go doSomethingComplex(complexChannel)
-
-  fmt.Println(<-simpleChannel)
-  x := <-complexChannel
-  fmt.Printf("%d - %s\n", x.id, x.name)
-
+  go getFromChannel(channel)
+  channel <- "qwer"
+  go getFromChannel(channel)
+  putToChannel(channel)
 }
