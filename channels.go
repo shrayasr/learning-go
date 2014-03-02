@@ -5,31 +5,27 @@ import (
   "time"
 )
 
-func doSomething(val chan bool) {
-  <-val
-  fmt.Println("doing something")
-}
-
-func doSomethingElse(val chan bool) {
-  <-val
-  fmt.Println("doing something else")
-}
-
-func khallas(val chan bool) {
-  time.Sleep(time.Second)
-  val <- true
-  val <- true
-  fmt.Println("khallas")
+func sleep(num int, done chan bool) {
+  time.Sleep(time.Duration(num)*time.Second)
+  fmt.Println(num)
+  done <- true
 }
 
 func main() {
 
-  channel := make(chan bool)
+  isDone := make(chan bool)
+  toSort := []int{7,6,1,2,9,2,3}
+  count := len(toSort)
 
-  go doSomething(channel)
-  go doSomethingElse(channel)
-  go khallas(channel)
+  for _, num := range toSort {
+    go sleep(num, isDone)
+  }
 
-  var input string
-  fmt.Scanln(&input)
+  for {
+    <-isDone
+    count--;
+    if count == 0 {
+      break
+    }
+  }
 }
