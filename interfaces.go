@@ -2,55 +2,45 @@ package main
 
 import "fmt"
 
-type drivable interface {
-  whoami() string
-  start() string
-  cruise() string
-  stop() string
+type Vehicle interface {
+  howManyWheels() int
+  milage() float32
 }
 
-type vehicle struct {
-  typeof string
-  wheels int
-  base_sound string
+type FourWheeledVehicles struct {
 }
 
-func (v vehicle) whoami() string {
-  return "---" + v.typeof
+func (f *FourWheeledVehicles) howManyWheels() int {
+  return 4
 }
 
-func (v vehicle) start() string {
-  return "Starting engine.. " + v.base_sound[:3]
+func (f *FourWheeledVehicles) milage() float32 {
+  return 11.3
 }
 
-func (v vehicle) cruise() string {
-
-  var x string
-  for i:=0; i<v.wheels; i++ {
-    x += v.base_sound
-  }
-  return x
+type TwoWheeledVehicles struct {
 }
 
-func (v vehicle) stop() string {
-  return "screeeech"
+func (t TwoWheeledVehicles) howManyWheels() int {
+  return 2
 }
 
-func drive (d drivable) {
-  fmt.Println(d.whoami())
-  fmt.Println(d.start())
-  fmt.Println(d.cruise())
-  fmt.Println(d.cruise())
-  fmt.Println(d.cruise())
-  fmt.Println(d.stop())
+func (t TwoWheeledVehicles) milage() float32 {
+  return 40.2
 }
+
+func getInfo(v Vehicle) {
+  fmt.Println(v.howManyWheels())
+  fmt.Println(v.milage())
+}
+
 
 func main() {
 
-  drivableVehicles := []drivable{&vehicle{"car",4,"vroom"}, &vehicle{"bullet",2,"budu"}}
+  vehicles := []Vehicle{new(FourWheeledVehicles), &TwoWheeledVehicles{}}
 
-  for _,drivableVehicle := range drivableVehicles {
-    drive(drivableVehicle)
+  for _, vehicle := range vehicles {
+    getInfo(vehicle)
   }
 
 }
